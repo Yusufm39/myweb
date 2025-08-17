@@ -4,284 +4,131 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Base64 Converter — Encode & Decode</title>
-  <meta name="description" content="Konversi teks ke/dari Base64 secara cepat dan aman untuk Unicode."/>
+  <meta name="description" content="Konversi teks ke/dari Base64 + SHA-256 + Binary"/>
   <style>
-    :root{
-      --bg: #0b0f14;
-      --card: #111824;
-      --muted: #7b8a9b;
-      --text: #e8eef5;
-      --accent: #4da3ff;
-      --accent-2: #90c2ff;
-      --ring: rgba(77,163,255,.35);
-      --danger: #ff5d5d;
-      --success: #46d37d;
-      --border: #1f2a3a;
-      --input: #0f1520;
-      --shadow: 0 6px 30px rgba(0,0,0,.35);
-      --radius: 14px;
-    }
-    @media (prefers-color-scheme: light){
-      :root{
-        --bg: #f7f9fc;
-        --card: #ffffff;
-        --text: #0f1726;
-        --muted: #5c6777;
-        --accent: #2563eb;
-        --accent-2: #4f83ff;
-        --ring: rgba(37,99,235,.2);
-        --danger: #d12c2c;
-        --success: #12824a;
-        --border: #e5e9f2;
-        --input: #f9fbff;
-        --shadow: 0 8px 30px rgba(16,24,40,.08);
-      }
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      background: radial-gradient(1200px 600px at 10% -10%, rgba(77,163,255,.12), transparent 60%),
-                  radial-gradient(800px 400px at 90% 10%, rgba(70,211,125,.08), transparent 60%),
-                  var(--bg);
-      color: var(--text); display:flex; align-items:center; justify-content:center; padding:28px;
-    }
-    .wrap{width: min(100%, 980px);}
-    header{
-      display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:12px;
-    }
-    .logo{
-      width:44px; height:44px; border-radius:12px; background:
-        conic-gradient(from 180deg at 50% 50%, var(--accent), var(--accent-2), var(--accent));
-      box-shadow: 0 6px 20px var(--ring), inset 0 0 0 8px rgba(255,255,255,.06);
-    }
-    h1{font-size: clamp(20px, 3vw, 26px); margin:0; letter-spacing:.2px}
-    .tag{color:var(--muted); font-size:14px}
-    .card{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-    .grid{
-      display: grid; gap:16px; padding:18px;
-    }
-    @media (min-width: 880px){
-      .grid{grid-template-columns: 1fr 1fr;}
-    }
-    .panel{
-      display:flex; flex-direction:column; gap:10px; padding:14px; background: linear-gradient(180deg, rgba(255,255,255,.02), transparent);
-      border:1px solid var(--border); border-radius:12px;
-    }
-    label{font-weight:600; font-size:14px}
-    textarea, input, select{
-      width:100%; border:1px solid var(--border); background: var(--input);
-      color: var(--text); padding:12px 14px; border-radius:10px; font-size:15px; outline:none;
-      transition:.15s border, .15s box-shadow, .15s transform;
-    }
-    textarea{min-height:180px; resize: vertical; line-height:1.55}
-    textarea:focus, input:focus, select:focus{
-      border-color: var(--accent); box-shadow: 0 0 0 6px var(--ring);
-    }
-    .hint{color:var(--muted); font-size:13px}
-    .toolbar{
-      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:flex-start; margin-top:6px;
-    }
-    button{
-      border:1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      color: var(--text); padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600; font-size:14px;
-      transition:.15s transform, .15s box-shadow, .15s background, .15s border;
-    }
-    button:hover{transform: translateY(-1px)}
-    .btn-primary{
-      background: linear-gradient(180deg, var(--accent), var(--accent-2));
-      color: white; border-color: transparent; box-shadow: 0 6px 20px var(--ring);
-    }
-    .btn-ghost{background: transparent}
-    .btn-danger{border-color: color-mix(in oklab, var(--danger) 60%, var(--border)); color: var(--danger)}
-    .btn-success{border-color: color-mix(in oklab, var(--success) 60%, var(--border)); color: var(--success)}
-    .row{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-    }
-    .row > *{flex: 1}
-    .status{
-      font-size:13px; color: var(--muted);
-      display:flex; align-items:center; gap:8px; margin-top:4px;
-    }
-    .status.ok{color: var(--success)}
-    .status.err{color: var(--danger)}
-    footer{
-      margin-top:12px; color:var(--muted); font-size:13px; display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap;
-      padding: 0 4px 4px;
-    }
-    code{background: rgba(125, 138, 155, .12); padding: 2px 6px; border-radius:6px}
-    .inline-select{max-width:220px}
+    /* === gaya sama seperti sebelumnya === */
+    :root{--bg:#0b0f14;--card:#111824;--muted:#7b8a9b;--text:#e8eef5;--accent:#4da3ff;--accent-2:#90c2ff;--ring:rgba(77,163,255,.35);--danger:#ff5d5d;--success:#46d37d;--border:#1f2a3a;--input:#0f1520;--shadow:0 6px 30px rgba(0,0,0,.35);--radius:14px;}
+    @media (prefers-color-scheme: light){:root{--bg:#f7f9fc;--card:#ffffff;--text:#0f1726;--muted:#5c6777;--accent:#2563eb;--accent-2:#4f83ff;--ring:rgba(37,99,235,.2);--danger:#d12c2c;--success:#12824a;--border:#e5e9f2;--input:#f9fbff;--shadow:0 8px 30px rgba(16,24,40,.08);}}
+    *{box-sizing:border-box}html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans","Apple Color Emoji","Segoe UI Emoji";background:var(--bg);color:var(--text);display:flex;align-items:center;justify-content:center;padding:28px;}
+    .wrap{width:min(100%,1100px);}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;}
+    .brand{display:flex;align-items:center;gap:12px;}
+    .logo{width:44px;height:44px;border-radius:12px;background:conic-gradient(from 180deg at 50% 50%,var(--accent),var(--accent-2),var(--accent));box-shadow:0 6px 20px var(--ring),inset 0 0 0 8px rgba(255,255,255,.06);}
+    h1{font-size:clamp(20px,3vw,26px);margin:0;letter-spacing:.2px}
+    .tag{color:var(--muted);font-size:14px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+    .grid{display:grid;gap:16px;padding:18px;}
+    @media(min-width:1000px){.grid{grid-template-columns:repeat(2,1fr);}}
+    .panel{display:flex;flex-direction:column;gap:10px;padding:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);border:1px solid var(--border);border-radius:12px;}
+    label{font-weight:600;font-size:14px}
+    textarea,select{width:100%;border:1px solid var(--border);background:var(--input);color:var(--text);padding:12px 14px;border-radius:10px;font-size:15px;outline:none;}
+    textarea{min-height:120px;resize:vertical;line-height:1.55}
+    textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 6px var(--ring);}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;}
+    button{border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;}
+    .btn-primary{background:linear-gradient(180deg,var(--accent),var(--accent-2));color:#fff;border:none;}
+    .btn-success{color:var(--success);border-color:var(--success)}
+    .btn-danger{color:var(--danger);border-color:var(--danger)}
+    .status{font-size:13px;color:var(--muted);}
+    .status.ok{color:var(--success)}.status.err{color:var(--danger)}
+    footer{margin-top:12px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:0 4px 4px;}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <h1>Base64 Converter</h1>
-          <div class="tag">Encode & Decode teks (Unicode-safe)</div>
+<div class="wrap">
+  <header>
+    <div class="brand"><div class="logo"></div><div><h1>Base64 Converter</h1><div class="tag">Encode & Decode + SHA-256 + Binary</div></div></div>
+  </header>
+
+  <div class="card">
+    <div class="grid">
+      <section class="panel">
+        <label for="input">Input</label>
+        <textarea id="input" placeholder="Masukkan teks…"></textarea>
+        <select id="mode">
+          <option value="encode">Encode ke Base64</option>
+          <option value="decode">Decode dari Base64</option>
+        </select>
+        <div class="toolbar">
+          <button class="btn-primary" id="convert">Convert</button>
+          <button class="btn-danger" id="clear">Clear</button>
         </div>
-      </div>
-    </header>
+        <div class="status" id="status">Siap.</div>
+      </section>
 
-    <div class="card">
-      <div class="grid">
-        <section class="panel" aria-labelledby="inputLabel">
-          <label id="inputLabel" for="input">Input</label>
-          <textarea id="input" placeholder="Tulis teks biasa untuk Encode, atau string Base64 untuk Decode…"></textarea>
-          <div class="row">
-            <select id="mode" class="inline-select" aria-label="Mode">
-              <option value="encode">Encode ke Base64</option>
-              <option value="decode">Decode dari Base64</option>
-            </select>
-            <div class="toolbar">
-              <button class="btn-primary" id="convert">Convert</button>
-              <button class="btn-ghost" id="swap" title="Tukar input & output">Tukar</button>
-              <button class="btn-danger" id="clear">Clear</button>
-            </div>
-          </div>
-          <div class="status" id="status">Siap.</div>
-          <div class="hint">Catatan: Base64 adalah <em>encoding</em>, bukan enkripsi keamanan.</div>
-        </section>
+      <section class="panel">
+        <label for="output">Hasil Base64</label>
+        <textarea id="output" readonly></textarea>
+        <div class="toolbar">
+          <button class="btn-success" id="copy">Copy</button>
+        </div>
+      </section>
 
-        <section class="panel" aria-labelledby="outputLabel">
-          <label id="outputLabel" for="output">Hasil</label>
-          <textarea id="output" placeholder="Hasil akan muncul di sini…" readonly></textarea>
-          <div class="toolbar">
-            <button class="btn-success" id="copy">Copy</button>
-            <button class="btn-ghost" id="download">Download .txt</button>
-          </div>
-        </section>
-      </div>
+      <section class="panel">
+        <label for="sha256">SHA-256 (Hex)</label>
+        <textarea id="sha256" readonly></textarea>
+      </section>
+
+      <section class="panel">
+        <label for="binary">Binary (UTF-8 bits)</label>
+        <textarea id="binary" readonly></textarea>
+      </section>
     </div>
-
-    <footer>
-      <div>Shortcut: <code>Ctrl/⌘ + Enter</code> untuk Convert • <code>Ctrl/⌘ + L</code> untuk Clear</div>
-      <div>© <span id="year"></span> — Created by M Yusuf Purnomo, S.Tr.Inst</div>
-    </footer>
   </div>
 
-  <script>
-    // --- Unicode-safe Base64 helpers ---
-    function encodeBase64(str){
-      const bytes = new TextEncoder().encode(str);
-      let binary = "";
-      for (let i=0; i<bytes.length; i++){ binary += String.fromCharCode(bytes[i]); }
-      return btoa(binary);
-    }
-    function decodeBase64(b64){
-      // atob -> binary string -> Uint8Array -> decode
-      const bin = atob(b64);
-      const bytes = new Uint8Array(bin.length);
-      for (let i=0; i<bin.length; i++){ bytes[i] = bin.charCodeAt(i); }
-      return new TextDecoder().decode(bytes);
-    }
+  <footer>
+    <div>© <span id="year"></span> — Created by M Yusuf Purnomo</div>
+  </footer>
+</div>
 
-    // --- UI elements ---
-    const $ = (s)=>document.querySelector(s);
-    const input = $('#input');
-    const output = $('#output');
-    const mode = $('#mode');
-    const convertBtn = $('#convert');
-    const swapBtn = $('#swap');
-    const clearBtn = $('#clear');
-    const copyBtn = $('#copy');
-    const downloadBtn = $('#download');
-    const status = $('#status');
-    $('#year').textContent = new Date().getFullYear();
+<script>
+function encodeBase64(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = ""; for(let b of bytes){bin+=String.fromCharCode(b)}
+  return btoa(bin);
+}
+function decodeBase64(b64){
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++){bytes[i]=bin.charCodeAt(i)}
+  return new TextDecoder().decode(bytes);
+}
+async function sha256Hex(str){
+  const buf = new TextEncoder().encode(str);
+  const hashBuf = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hashBuf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function toBinary(str){
+  const bytes = new TextEncoder().encode(str);
+  return Array.from(bytes).map(b=>b.toString(2).padStart(8,'0')).join(' ');
+}
 
-    function setStatus(msg, type=''){
-      status.textContent = msg;
-      status.className = 'status ' + (type || '');
-    }
+const input=document.getElementById('input');
+const output=document.getElementById('output');
+const shaOut=document.getElementById('sha256');
+const binOut=document.getElementById('binary');
+const mode=document.getElementById('mode');
+const status=document.getElementById('status');
+document.getElementById('year').textContent=new Date().getFullYear();
 
-    function convert(){
-      const text = input.value.trim();
-      if(!text){ output.value = ''; setStatus('Input kosong.'); return; }
-      try{
-        let result = '';
-        if(mode.value === 'encode'){
-          result = encodeBase64(text);
-          setStatus('Sukses: teks di-encode ke Base64.', 'ok');
-        }else{
-          result = decodeBase64(text);
-          setStatus('Sukses: Base64 di-decode ke teks.', 'ok');
-        }
-        output.value = result;
-      }catch(err){
-        console.error(err);
-        setStatus('Gagal memproses. Periksa format Base64 Anda.', 'err');
-      }
-    }
-
-    function copyToClipboard(){
-      if(!output.value){ setStatus('Tidak ada hasil untuk disalin.'); return; }
-      navigator.clipboard.writeText(output.value)
-        .then(()=> setStatus('Hasil tersalin ke clipboard.', 'ok'))
-        .catch(()=> setStatus('Clipboard tidak diizinkan oleh browser.', 'err'));
-    }
-
-    function downloadResult(){
-      if(!output.value){ setStatus('Tidak ada hasil untuk diunduh.'); return; }
-      const blob = new Blob([output.value], {type:'text/plain;charset=utf-8'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      const suffix = (mode.value === 'encode') ? 'base64' : 'text';
-      a.download = `hasil-${suffix}.txt`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      setStatus('Hasil diunduh sebagai file .txt', 'ok');
-    }
-
-    function swapIO(){
-      const temp = output.value;
-      output.value = input.value;
-      input.value = temp;
-      // Toggle mode otomatis
-      mode.value = (mode.value === 'encode') ? 'decode' : 'encode';
-      setStatus('Input & output ditukar. Mode ikut diubah.');
-    }
-
-    function clearAll(){
-      input.value = '';
-      output.value = '';
-      setStatus('Dibersihkan.');
-      input.focus();
-    }
-
-    // Events
-    convertBtn.addEventListener('click', convert);
-    copyBtn.addEventListener('click', copyToClipboard);
-    downloadBtn.addEventListener('click', downloadResult);
-    swapBtn.addEventListener('click', swapIO);
-    clearBtn.addEventListener('click', clearAll);
-    mode.addEventListener('change', ()=> setStatus('Mode diubah ke: ' + mode.options[mode.selectedIndex].text));
-
-    // Live convert (debounced)
-    let t;
-    input.addEventListener('input', ()=>{
-      clearTimeout(t);
-      t = setTimeout(()=>{ if(input.value.trim()) convert(); else { output.value=''; setStatus('Siap.'); } }, 250);
-    });
-
-    // Shortcuts
-    document.addEventListener('keydown', (e)=>{
-      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'enter'){ e.preventDefault(); convert(); }
-      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'l'){ e.preventDefault(); clearAll(); }
-    });
-  </script>
+async function convert(){
+  const text=input.value.trim();
+  if(!text){output.value=shaOut.value=binOut.value='';status.textContent='Input kosong.';return;}
+  try{
+    let base='';
+    if(mode.value==='encode'){base=encodeBase64(text);}
+    else{base=decodeBase64(text);}
+    output.value=base;
+    shaOut.value=await sha256Hex(text);
+    binOut.value=toBinary(text);
+    status.textContent='Berhasil diproses.';status.className='status ok';
+  }catch(e){status.textContent='Error format Base64.';status.className='status err';}
+}
+function clearAll(){input.value='';output.value=shaOut.value=binOut.value='';status.textContent='Dibersihkan.';}
+document.getElementById('convert').onclick=convert;
+document.getElementById('clear').onclick=clearAll;
+document.getElementById('copy').onclick=()=>{navigator.clipboard.writeText(output.value)};
+</script>
 </body>
 </html>
