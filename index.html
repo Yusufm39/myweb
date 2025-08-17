@@ -6,39 +6,76 @@
   <title>Base64 Converter</title>
   <meta name="description" content="Konversi teks ke/dari Base64 + SHA-256 + Binary"/>
   <style>
-    /* === gaya sama seperti sebelumnya === */
-    :root{--bg:#0b0f14;--card:#111824;--muted:#7b8a9b;--text:#e8eef5;--accent:#4da3ff;--accent-2:#90c2ff;--ring:rgba(77,163,255,.35);--danger:#ff5d5d;--success:#46d37d;--border:#1f2a3a;--input:#0f1520;--shadow:0 6px 30px rgba(0,0,0,.35);--radius:14px;}
-    @media (prefers-color-scheme: light){:root{--bg:#f7f9fc;--card:#ffffff;--text:#0f1726;--muted:#5c6777;--accent:#2563eb;--accent-2:#4f83ff;--ring:rgba(37,99,235,.2);--danger:#d12c2c;--success:#12824a;--border:#e5e9f2;--input:#f9fbff;--shadow:0 8px 30px rgba(16,24,40,.08);}}
-    *{box-sizing:border-box}html,body{height:100%}
-    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans","Apple Color Emoji","Segoe UI Emoji";background:var(--bg);color:var(--text);display:flex;align-items:center;justify-content:center;padding:28px;}
-    .wrap{width:min(100%,1100px);}
-    header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;}
-    .brand{display:flex;align-items:center;gap:12px;}
-    .logo{width:44px;height:44px;border-radius:12px;background:conic-gradient(from 180deg at 50% 50%,var(--accent),var(--accent-2),var(--accent));box-shadow:0 6px 20px var(--ring),inset 0 0 0 8px rgba(255,255,255,.06);}
-    h1{font-size:clamp(20px,3vw,26px);margin:0;letter-spacing:.2px}
-    .tag{color:var(--muted);font-size:14px}
+    :root{
+      --bg:#0b0f14;--card:#111824;--muted:#7b8a9b;--text:#e8eef5;--accent:#4da3ff;
+      --accent-2:#90c2ff;--ring:rgba(77,163,255,.35);--danger:#ff5d5d;
+      --success:#46d37d;--border:#1f2a3a;--input:#0f1520;
+      --shadow:0 6px 30px rgba(0,0,0,.35);--radius:14px;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f7f9fc;--card:#ffffff;--text:#0f1726;--muted:#5c6777;
+        --accent:#2563eb;--accent-2:#4f83ff;--ring:rgba(37,99,235,.2);
+        --danger:#d12c2c;--success:#12824a;--border:#e5e9f2;--input:#f9fbff;
+        --shadow:0 8px 30px rgba(16,24,40,.08);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background:var(--bg);color:var(--text);
+      display:flex;align-items:center;justify-content:center;
+      padding:18px;
+    }
+    .wrap{width:100%;max-width:1100px;}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;}
+    .brand{display:flex;align-items:center;gap:10px;}
+    .logo{width:40px;height:40px;border-radius:12px;
+      background:conic-gradient(from 180deg at 50% 50%,var(--accent),var(--accent-2),var(--accent));
+      box-shadow:0 6px 20px var(--ring),inset 0 0 0 6px rgba(255,255,255,.06);}
+    h1{font-size:clamp(18px,4vw,26px);margin:0;letter-spacing:.2px}
+    .tag{color:var(--muted);font-size:13px}
     .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
-    .grid{display:grid;gap:16px;padding:18px;}
-    @media(min-width:1000px){.grid{grid-template-columns:repeat(2,1fr);}}
-    .panel{display:flex;flex-direction:column;gap:10px;padding:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);border:1px solid var(--border);border-radius:12px;}
+    
+    /* grid default mobile = 1 kolom */
+    .grid{display:grid;gap:14px;padding:14px;grid-template-columns:1fr;}
+    @media(min-width:1000px){
+      .grid{grid-template-columns:repeat(2,1fr);}
+    }
+    .panel{display:flex;flex-direction:column;gap:8px;padding:12px;
+      background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
+      border:1px solid var(--border);border-radius:12px;}
     label{font-weight:600;font-size:14px}
-    textarea,select{width:100%;border:1px solid var(--border);background:var(--input);color:var(--text);padding:12px 14px;border-radius:10px;font-size:15px;outline:none;}
-    textarea{min-height:120px;resize:vertical;line-height:1.55}
-    textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 6px var(--ring);}
-    .toolbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;}
-    button{border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;}
+    textarea,select{
+      width:100%;border:1px solid var(--border);background:var(--input);color:var(--text);
+      padding:10px 12px;border-radius:10px;font-size:15px;outline:none;
+    }
+    textarea{min-height:110px;resize:vertical;line-height:1.55}
+    textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 5px var(--ring);}
+    
+    .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+    button{
+      flex:1; /* supaya tombol isi lebar penuh di mobile */
+      border:1px solid var(--border);background:rgba(255,255,255,.03);
+      color:var(--text);padding:10px;border-radius:8px;cursor:pointer;
+      font-weight:600;font-size:14px;min-width:100px;
+    }
     .btn-primary{background:linear-gradient(180deg,var(--accent),var(--accent-2));color:#fff;border:none;}
     .btn-success{color:var(--success);border-color:var(--success)}
     .btn-danger{color:var(--danger);border-color:var(--danger)}
     .status{font-size:13px;color:var(--muted);}
     .status.ok{color:var(--success)}.status.err{color:var(--danger)}
-    footer{margin-top:12px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:0 4px 4px;}
+    footer{margin-top:12px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap;padding:0 4px 4px;}
   </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div class="brand"><div class="logo"></div><div><h1>Enkripsi Code</h1><div class="tag">Encode & Decode + SHA-256 + Binary</div></div></div>
+    <div class="brand">
+      <div class="logo"></div>
+      <div><h1>Enkripsi Code</h1><div class="tag">Encode & Decode + SHA-256 + Binary</div></div>
+    </div>
   </header>
 
   <div class="card">
@@ -84,26 +121,25 @@
 
 <script>
 function encodeBase64(str){
-  const bytes = new TextEncoder().encode(str);
-  let bin = ""; for(let b of bytes){bin+=String.fromCharCode(b)}
+  const bytes=new TextEncoder().encode(str);
+  let bin="";for(let b of bytes){bin+=String.fromCharCode(b)}
   return btoa(bin);
 }
 function decodeBase64(b64){
-  const bin = atob(b64);
-  const bytes = new Uint8Array(bin.length);
+  const bin=atob(b64);
+  const bytes=new Uint8Array(bin.length);
   for(let i=0;i<bin.length;i++){bytes[i]=bin.charCodeAt(i)}
   return new TextDecoder().decode(bytes);
 }
 async function sha256Hex(str){
-  const buf = new TextEncoder().encode(str);
-  const hashBuf = await crypto.subtle.digest('SHA-256', buf);
+  const buf=new TextEncoder().encode(str);
+  const hashBuf=await crypto.subtle.digest('SHA-256',buf);
   return Array.from(new Uint8Array(hashBuf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 function toBinary(str){
-  const bytes = new TextEncoder().encode(str);
+  const bytes=new TextEncoder().encode(str);
   return Array.from(bytes).map(b=>b.toString(2).padStart(8,'0')).join(' ');
 }
-
 const input=document.getElementById('input');
 const output=document.getElementById('output');
 const shaOut=document.getElementById('sha256');
@@ -114,18 +150,17 @@ document.getElementById('year').textContent=new Date().getFullYear();
 
 async function convert(){
   const text=input.value.trim();
-  if(!text){output.value=shaOut.value=binOut.value='';status.textContent='Input kosong.';return;}
+  if(!text){output.value=shaOut.value=binOut.value='';status.textContent='Input kosong.';status.className='status';return;}
   try{
     let base='';
-    if(mode.value==='encode'){base=encodeBase64(text);}
-    else{base=decodeBase64(text);}
+    if(mode.value==='encode'){base=encodeBase64(text);}else{base=decodeBase64(text);}
     output.value=base;
     shaOut.value=await sha256Hex(text);
     binOut.value=toBinary(text);
     status.textContent='Berhasil diproses.';status.className='status ok';
   }catch(e){status.textContent='Error format Base64.';status.className='status err';}
 }
-function clearAll(){input.value='';output.value=shaOut.value=binOut.value='';status.textContent='Dibersihkan.';}
+function clearAll(){input.value='';output.value=shaOut.value=binOut.value='';status.textContent='Dibersihkan.';status.className='status';}
 document.getElementById('convert').onclick=convert;
 document.getElementById('clear').onclick=clearAll;
 document.getElementById('copy').onclick=()=>{navigator.clipboard.writeText(output.value)};
